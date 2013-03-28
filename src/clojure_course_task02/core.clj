@@ -45,11 +45,11 @@
   "Speed tests."
 
   (def test-path "./")
-  (def sniffer (create-sniffer ".clj"))
+  (def sniffer (create-sniffer "^core.+"))
   (time (path-wanderer-recur sniffer test-path))
   (time (path-wanderer-recur sniffer test-path true))
   (time (do (def acc-list (agent (list)))
-            (dorun (path-wanderer-pmap sniffer (File. test-path)))
+            (path-wanderer-pmap sniffer (File. test-path))
             @acc-list))
 )
 
@@ -69,7 +69,8 @@
     (usage)
     (do
       (println "Searching for " file-name " in " path "...")
-      (dorun (map println (find-files file-name path))))))
+      (dorun (map println (find-files file-name path)))
+      (shutdown-agents))))
 
 (comment
   (find-files "^core.+" "./")
